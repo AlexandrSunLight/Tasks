@@ -147,33 +147,21 @@ public class Solution02 {
             return hasSegment;
         }
 
-        private boolean inPolygon(Point testpoint){
-            int angle = 0;
-            for (int i = 1; i < points.size(); i++){
-                double vectorACoordinateX = points.get(i - 1).x - testpoint.x;
-                double vectorACoordinateY = points.get(i - 1).y - testpoint.y;
-                double vectorBCoordinateX = points.get(i).x - testpoint.x;
-                double vectorBCoordinateY = points.get(i).y - testpoint.y;
-
-                double vectorALength = Math.sqrt(vectorACoordinateX * vectorACoordinateX + vectorACoordinateY * vectorACoordinateY);
-                double vectorBLength = Math.sqrt(vectorBCoordinateX * vectorBCoordinateX + vectorBCoordinateY * vectorBCoordinateY);
-                angle += Math.acos((vectorACoordinateX * vectorBCoordinateX + vectorACoordinateY * vectorBCoordinateY) / (vectorALength * vectorBLength));
-            }
-            double vectorACoordinateX = points.get(points.size() - 1).x - testpoint.x;
-            double vectorACoordinateY = points.get(points.size() - 1).y - testpoint.y;
-            double vectorBCoordinateX = points.get(0).x - testpoint.x;
-            double vectorBCoordinateY = points.get(0).y - testpoint.y;
-
-            double vectorALength = Math.sqrt(vectorACoordinateX * vectorACoordinateX + vectorACoordinateY * vectorACoordinateY);
-            double vectorBLength = Math.sqrt(vectorBCoordinateX * vectorBCoordinateX + vectorBCoordinateY * vectorBCoordinateY);
-            angle += Math.acos((vectorACoordinateX * vectorBCoordinateX + vectorACoordinateY * vectorBCoordinateY) / (vectorALength * vectorBLength));
-
-            if (angle != 0){
+        private boolean inTriangle(Point p1, Point p2, Point p3,Point testpoint){
+            double a = (p1.x - testpoint.x) * (p2.y - p1.y) - (p2.x - p1.x) * (p1.y - testpoint.y);
+            double b = (p2.x - testpoint.x) * (p3.y - p2.y) - (p3.x - p2.x) * (p2.y - testpoint.y);
+            double c = (p3.x - testpoint.x) * (p1.y - p3.y) - (p1.x - p3.x) * (p3.y - testpoint.y);
+            if ( a <= 0 & b <= 0 & c <= 0 || a >= 0 & b >= 0 & c >= 0){
                 return true;
             }
-            else {
-                return false;
+            else return false;
+        }
+
+        private boolean inPolygon(Point testpoint) {
+            if (inTriangle(points.get(0), points.get(1), points.get(3), testpoint) || inTriangle(points.get(1), points.get(2), points.get(3), testpoint)) {
+                return true;
             }
+            else return false;
         }
     }
 }
